@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sinker – Focus Timer</title>
+<meta name="description" content="A focus timer where every session is a cast. Stay focused, sink into the deep, and catch rare fish. Try the free web timer, then get Sinker for iPhone.">
+<meta name="theme-color" content="#5EC8E5">
+<meta property="og:title" content="Sinker – Focus Timer">
+<meta property="og:description" content="Focus like you're fishing. Stay focused and your line sinks into the deep.">
+<meta property="og:image" content="assets/icon.png">
+<link rel="icon" href="assets/icon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="sr-only" href="#dive">Skip to the timer</a>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#dive" aria-label="Sinker home"><img src="assets/icon.png" alt="" width="36" height="36">Sinker</a>
+  <nav class="nav-links" aria-label="Main">
+    <a href="#how">How it works</a>
+    <a href="#fish">Fish</a>
+    <a href="#pro">Pro</a>
+    <a href="#faq">FAQ</a>
+    <a class="pill" href="#get" data-store>Get the app</a>
+  </nav>
+</header>
+
+<!-- ============ THE TIMER (surface) ============ -->
+<main>
+<section class="dive" id="dive" aria-label="Free focus timer">
+  <div class="water"></div>
+  <div class="rays" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="snow" id="snow" aria-hidden="true"></div>
+
+  <div class="world" aria-hidden="true">
+    <div class="sky"><div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div></div>
+    <svg class="surface" viewBox="0 0 400 22" preserveAspectRatio="none"><path d="M0 11 Q 25 3 50 11 T 100 11 T 150 11 T 200 11 T 250 11 T 300 11 T 350 11 T 400 11 V22 H0 Z" fill="rgba(255,255,255,0.55)"/></svg>
+    <!-- the same boat, rod and fisher as the app (scene 352×110, cropped to x 60–296) -->
+    <svg class="boat" viewBox="60 0 236 110">
+      <path d="M178 46 Q 226 6 262 18" stroke="#C9A15A" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+      <circle cx="196" cy="32" r="1.6" fill="#8A6A2E"/><circle cx="216" cy="21" r="1.6" fill="#8A6A2E"/><circle cx="236" cy="15" r="1.6" fill="#8A6A2E"/><circle cx="252" cy="15" r="1.6" fill="#8A6A2E"/>
+      <rect x="150" y="44" width="22" height="30" rx="8" fill="#F2B33D"/>
+      <circle cx="161" cy="36" r="9" fill="#E9B48A"/>
+      <path d="M148 33 Q161 18 174 33 Z" fill="#2F5D4E"/><rect x="146" y="31" width="30" height="4" rx="2" fill="#2F5D4E"/>
+      <path d="M170 52 L180 46" stroke="#E9B48A" stroke-width="5" stroke-linecap="round"/>
+      <path d="M104 72 L248 72 Q240 98 214 100 L136 100 Q112 98 104 72 Z" fill="#C8553D"/>
+      <path d="M104 72 L248 72 L245 80 L107 80 Z" fill="#F7FBFC"/>
+      <rect x="196" y="58" width="26" height="14" rx="3" fill="#8A5A3B"/>
+    </svg>
+    <div class="line" id="line"></div>
+    <svg class="hook" id="hook" viewBox="-20 -10 40 50">
+      <circle r="5" fill="#E25A35" stroke="#fff" stroke-width="1.5"/>
+      <path d="M0 5 v10 q0 6 -6 4" stroke="#DDE6EA" stroke-width="1.6" fill="none"/>
+      <path d="M-1 16 q9 0 8 8 q-1 6 -8 5 q4 -2 3 -5 q-1 -4 -6 -3z" fill="#F59B6B"/>
+    </svg>
+  </div>
+  <div id="swimmers" aria-hidden="true"></div>
+
+  <div class="panel" id="panel">
+    <div class="intro">
+      <p class="eyebrow">Free focus timer · right here</p>
+      <h1 class="headline">Focus like you're fishing.</h1>
+    </div>
+    <p class="status" id="status" aria-live="polite"></p>
+    <div class="timer" id="timer" role="timer" aria-label="Focus length 25 minutes">25:00</div>
+    <p class="readout" id="readout">Reaches the very bottom · 5 min break after</p>
+
+    <div class="chips" id="lengths" role="group" aria-label="Focus length">
+      <span class="label">Focus</span>
+      <button class="chip" data-min="15">15</button>
+      <button class="chip" data-min="25" aria-pressed="true">25</button>
+      <button class="chip" data-min="45">45</button>
+      <button class="chip" data-min="60">60</button>
+    </div>
+    <div class="chips" id="breaks" role="group" aria-label="Break length">
+      <span class="label">Break</span>
+      <button class="chip" data-break="5" aria-pressed="true">5</button>
+      <button class="chip" data-break="10">10</button>
+      <button class="chip" data-break="15">15</button>
+    </div>
+
+    <div class="controls" id="controls">
+      <button class="btn" id="btn-cast">Cast line</button>
+      <button class="btn ghost" id="btn-pause" hidden>Pause</button>
+      <button class="btn ghost" id="btn-reel" hidden>Reel in</button>
+      <button class="btn" id="btn-reel-now" hidden>Reel in!</button>
+      <button class="btn light" id="btn-skip" hidden>Skip break</button>
+      <button class="btn" id="btn-break" hidden>Start break</button>
+      <button class="btn" id="btn-again" hidden>Cast again</button>
+    </div>
+    <p class="fine" id="fine">Rings when a fish bites. <button id="btn-notify" type="button">Notify me in other tabs</button> · <button id="btn-log" type="button">Logbook <span id="log-count">0</span></button></p>
+  </div>
+
+  <a class="scroll-cue" href="#how"><span></span>Dive in</a>
+</section>
+
+<!-- ============ SUNLIGHT ============ -->
+<section class="zone" id="how" data-depth="120">
+  <div class="split">
+    <div class="reveal">
+      <p class="zone-label">Sunlight zone · 0–200 m</p>
+      <h2>Every session<br>is a cast.</h2>
+      <p class="lede">Pick a focus length and cast your line. While you work, it sinks. Stay focused and it keeps going down. Give up early and you'll mostly reel in an old boot.</p>
+      <div class="steps">
+        <div class="step card"><div><h3>Cast and focus</h3><p>25 minutes or more takes your line all the way to the bottom of the sea.</p></div></div>
+        <div class="step card"><div><h3>Wait for the bite</h3><p>When time's up, something bites and the alarm rings. Reel it in.</p></div></div>
+        <div class="step card"><div><h3>Take your break</h3><p>Rest your eyes on deck, then cast again. Your streak grows every day you show up.</p></div></div>
+      </div>
+    </div>
+    <div class="ladder card reveal" aria-label="The five zones">
+      <div class="shaft"></div><div class="lure"></div>
+      <ol>
+        <li style="background:rgba(94,200,229,.28)">Sunlight <small>0–200 m</small></li>
+        <li style="background:rgba(28,127,181,.32)">Twilight <small>200–1,000 m</small></li>
+        <li style="background:rgba(18,64,122,.45)">Midnight <small>1,000–4,000 m</small></li>
+        <li style="background:rgba(10,26,58,.6)">Abyss <small>4,000–6,000 m</small></li>
+        <li style="background:rgba(2,3,10,.75)">Hadal Trench <small>to 11,000 m</small></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TWILIGHT ============ -->
+<section class="zone" id="fish" data-depth="700">
+  <div class="reveal">
+    <p class="zone-label">Twilight zone · 200–1,000 m</p>
+    <h2>78 species.<br>Some of them glow.</h2>
+    <p class="lede">From Bangus and Lapu-lapu in the shallows to the Mariana snailfish in the trench. The deeper you focus, the rarer the catch. Keep the best ones in your tank, where they earn coins while you're away.</p>
+    <div class="stats">
+      <div class="stat card"><b>78</b><span>species to discover</span></div>
+      <div class="stat card"><b>5</b><span>zones down to 11 km</span></div>
+      <div class="stat card"><b>23</b><span>achievements</span></div>
+      <div class="stat card"><b>3%</b><span>chance of a golden fish</span></div>
+    </div>
+  </div>
+  <div class="parade" id="parade" aria-hidden="true"><div class="track a"></div><div class="track b"></div></div>
+</section>
+
+<!-- ============ MIDNIGHT ============ -->
+<section class="zone" id="everywhere" data-depth="2500">
+  <div class="split flip">
+    <div class="reveal">
+      <p class="zone-label">Midnight zone · 1,000–4,000 m</p>
+      <h2>Your line,<br>always in view.</h2>
+      <p class="lede">Watch it sink from the Dynamic Island, the Lock Screen and your Home Screen widgets, without opening the app. Start a session with Siri, a Shortcut, or automatically when a Focus mode turns on.</p>
+    </div>
+    <div class="devices reveal" aria-hidden="true">
+      <div class="island"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M2 12c3-4 7-6 11-6 3 0 5 1 7 3l2-2v10l-2-2c-2 2-4 3-7 3-4 0-8-2-11-6Z"/></svg><span class="t" data-clock>18:42</span></div>
+      <div class="live">
+        <div><div class="lbl"><img src="assets/icon.png" alt="">Fishing · 742 m</div><div class="big" data-clock>18:42</div></div>
+        <div class="meter"><i id="live-meter"></i></div>
+      </div>
+      <div class="widgets">
+        <div class="widget" style="background:linear-gradient(160deg,#1C7FB5,#12407A)"><small>Fishing</small><b data-clock>18:42</b><small>742 m · Twilight</small></div>
+        <div class="widget" style="background:linear-gradient(160deg,#7FD6EC,#2A93C4)"><small>Tank</small><span id="widget-fish"></span><small>48 coins ready</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABYSS ============ -->
+<section class="zone" id="pro" data-depth="5000">
+  <div class="reveal">
+    <p class="zone-label">Abyss · 4,000–6,000 m</p>
+    <h2 class="pro-badge">Sinker <em>PRO</em></h2>
+    <p class="lede">Sinker is free. Pro is a one-time purchase that unlocks everything else. No subscription, no ads, yours forever.</p>
+  </div>
+  <div class="perks reveal" id="perks"></div>
+  <div class="free-vs reveal">
+    <div class="card"><h3>Free, forever</h3><ul><li>The full focus timer and breaks</li><li>Fishing down to 1,000 m</li><li>Tank, shop, journal and quests</li><li>Six alarm tones, streaks and achievements</li></ul></div>
+    <div class="card" style="border-color:rgba(246,195,74,.45)"><h3>With Pro</h3><ul><li>The whole sea, down to 11 km</li><li>Widgets, Live Activity and Dynamic Island</li><li>Golden fish, Pro designs and more tones</li><li>Custom lengths, streak shield, logbook</li></ul></div>
+  </div>
+</section>
+
+<!-- ============ TRENCH ============ -->
+<section class="zone" id="faq" data-depth="8000">
+  <div class="reveal">
+    <p class="zone-label">Hadal trench · 6,000–11,000 m</p>
+    <h2>Questions from<br>the deep.</h2>
+  </div>
+  <div class="faq reveal">
+    <details class="card"><summary>Is Sinker free?</summary><p>Yes. The app is free to download and the focus timer, fishing, tank, shop and journal are free forever. Sinker Pro is an optional one-time purchase.</p></details>
+    <details class="card"><summary>Is Pro a subscription?</summary><p>No. You pay once and keep it. It's tied to your Apple ID, so you can restore it on a new iPhone, and Family Sharing can be turned on.</p></details>
+    <details class="card"><summary>Do I need an account?</summary><p>No account, no sign-in. Your progress stays on your iPhone and is backed up to your own iCloud so you can restore it later.</p></details>
+    <details class="card"><summary>Does it track me?</summary><p>No tracking, no ads, no analytics. The only thing that ever leaves your phone is a rough location for the optional Real weather feature. <a href="privacy.html">Read the privacy policy</a>.</p></details>
+    <details class="card"><summary>What happens if I leave early?</summary><p>You can reel in any time. Your line only got as deep as you stayed, so you'll catch something from that depth, or trash if it was under three minutes. You still get your break.</p></details>
+    <details class="card"><summary>Is there an Android version?</summary><p>Not yet. Sinker is iPhone first. This web timer works on any device in the meantime.</p></details>
+  </div>
+</section>
+
+<section class="zone finale" id="get" data-depth="10800">
+  <img class="icon reveal" src="assets/icon.png" alt="Sinker app icon" width="120" height="120">
+  <h2 class="reveal">You made it to<br>the bottom.</h2>
+  <p class="lede reveal" style="margin-top:0">Now take the whole sea with you. Sinker for iPhone has the tank, the shop, 78 species, widgets and your streaks.</p>
+  <a class="store-badge reveal" href="#" data-store aria-label="Download Sinker on the App Store">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-1.9-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.2 1-4.1 2.5-1.8 3-.5 7.6 1.3 10.1.8 1.2 1.8 2.6 3.1 2.5 1.3 0 1.7-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.2-1.2 3-2.5.9-1.4 1.3-2.7 1.3-2.8 0 0-2.6-1-2.6-4.2ZM14 5.3c.7-.8 1.2-2 1-3.2-1 .1-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4Z"/></svg>
+    <span><small data-store-small>Coming soon on the</small><strong>App Store</strong></span>
+  </a>
+  <div class="seabed" aria-hidden="true">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 70 Q 90 40 180 64 T 360 58 Q 450 30 540 60 T 720 56 Q 820 28 900 58 T 1200 50 V120 H0 Z" fill="#0A1A3A" opacity=".7"/><path d="M0 92 Q 140 70 260 90 T 520 86 Q 650 66 760 88 T 1200 80 V120 H0 Z" fill="#050B1C"/></svg>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#dive" style="color:#fff"><img src="assets/icon.png" alt="" width="32" height="32">Sinker</a>
+    <nav aria-label="Footer">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="mailto:fourpixelsdev@gmail.com">Support: fourpixelsdev@gmail.com</a>
+    </nav>
+    <span>© <span id="year">2026</span> Fourpixels</span>
+  </div>
+</footer>
+
+<aside class="gauge" id="gauge" aria-hidden="true">
+  <div class="m" id="gauge-m">0 m</div>
+  <div class="bar"><div class="dot"></div></div>
+  <div class="z" id="gauge-z">Sunlight</div>
+</aside>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="catch-name">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script src="species.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
