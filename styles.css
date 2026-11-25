@@ -166,7 +166,7 @@ p { margin: 0; }
 .scroll-cue span::after { content: ""; position: absolute; left: 50%; top: 6px; width: 4px; height: 7px; margin-left: -2px; border-radius: 2px; background: currentColor; animation: cue 1.6s ease-in-out infinite; }
 @keyframes cue { 60% { transform: translateY(10px); opacity: 0; } 100% { opacity: 0; } }
 .dive.deep .scroll-cue { display: none; }
-@media (max-width: 720px) { .scroll-cue { display: none; } }
+@media (max-width: 959px), (max-height: 760px) { .scroll-cue { display: none; } }
 
 /* ---------- catch modal ---------- */
 .modal { position: fixed; inset: 0; z-index: 80; display: grid; place-items: end center; background: rgba(3, 12, 22, 0.5); opacity: 0; pointer-events: none; transition: opacity 0.25s; }
