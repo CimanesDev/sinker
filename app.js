@@ -6,8 +6,9 @@
 (() => {
   'use strict';
 
-  // Set this once Sinker is live on the App Store (e.g. https://apps.apple.com/app/id1234567890).
-  const APP_STORE_URL = '';
+  // Where "Download on the App Store" goes. Until you paste the app's direct link here
+  // (e.g. https://apps.apple.com/app/id1234567890), it opens an App Store search for Sinker.
+  const APP_STORE_URL = 'https://apps.apple.com/us/iphone/search?term=sinker%20focus%20timer';
 
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -121,7 +122,8 @@
   /* ---------------- elements ---------------- */
   const dive = $('#dive');
   const el = {
-    timer: $('#timer'), status: $('#status'), readout: $('#readout'), lengths: $('#lengths'), breaks: $('#breaks'),
+    timer: $('#timer'), status: $('#status'), readout: $('#readout'), pickFocus: $('#pick-focus'), pickBreak: $('#pick-break'),
+    selFocus: $('#sel-focus'), selBreak: $('#sel-break'), heroStore: $('#hero-store'),
     cast: $('#btn-cast'), pause: $('#btn-pause'), reel: $('#btn-reel'), reelNow: $('#btn-reel-now'), skip: $('#btn-skip'),
     brk: $('#btn-break'), again: $('#btn-again'), fine: $('#fine'), nav: $('#nav'), modal: $('#modal'), sheet: $('#sheet'),
     logCount: $('#log-count'),
@@ -130,15 +132,17 @@
   /* ---------------- layout: boat, rod tip, line ---------------- */
   let geo = {};
   function layout() {
-    const W = dive.clientWidth, H = dive.clientHeight;
-    const wide = W >= 960;
-    const skyH = Math.round(H * (wide ? 0.34 : 0.28));
-    const boatW = wide ? Math.min(W * 0.4, 520) : Math.min(W * 0.92, 440);
+    // Sized to the viewport (the section itself can grow taller than it on short windows).
+    const W = dive.clientWidth, H = innerHeight;
+    const skyH = Math.round(clamp(H * 0.3, 150, 300));
+    // Centered boat, never taller than the sky band leaves room for.
+    const boatW = Math.min(W * 0.86, 480, (skyH - 18) / 0.82 / (110 / 236));
     const boatH = (boatW * 110) / 236;
-    const boatX = wide ? W * 0.07 : (W - boatW) / 2;
+    const boatX = (W - boatW) / 2;
     const tipX = boatX + ((262 - 60) / 236) * boatW;
     const tipY = skyH - boatH * 0.82 + (18 / 110) * boatH;
-    geo = { W, H, skyH, tipY, idleLen: skyH + 34 - tipY, deepLen: H * 0.66 + skyH + 60 - tipY };
+    // While fishing the world scrolls up by skyH + 60; the hook should end ~56% down the screen.
+    geo = { W, H, skyH, tipY, idleLen: skyH + 30 - tipY, deepLen: H * 0.56 + skyH + 60 - tipY };
     const st = dive.style;
     st.setProperty('--sky-h', `${skyH}px`);
     st.setProperty('--boat-w', `${boatW}px`);
@@ -249,6 +253,11 @@
   }
   $('#btn-log').addEventListener('click', showLog);
 
+  function clearSwimmers() {
+    const box = document.getElementById('swimmers');
+    if (box) box.replaceChildren();
+  }
+
   /* ---------------- render ---------------- */
   let lastStatus = null;
   function render(now) {
@@ -282,8 +291,11 @@
     if (el.status.textContent !== status) el.status.textContent = status;
     el.readout.textContent = read;
 
-    el.lengths.hidden = !(st === 'idle' || st === 'breakOver');
-    el.breaks.hidden = !(st === 'idle' || st === 'breakReady');
+    el.pickFocus.hidden = !(st === 'idle' || st === 'breakOver');
+    el.pickBreak.hidden = !(st === 'idle' || st === 'breakReady');
+    el.heroStore.hidden = st !== 'idle';
+    el.selFocus.value = String(s.planned);
+    el.selBreak.value = String(s.brk);
     el.cast.hidden = st !== 'idle';
     el.pause.hidden = st !== 'focus';
     el.pause.textContent = paused ? 'Resume' : 'Pause';
@@ -293,8 +305,6 @@
     el.brk.hidden = st !== 'breakReady';
     el.again.hidden = st !== 'breakOver';
     el.fine.hidden = deep;
-    $$('#lengths .chip').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.min === s.planned)));
-    $$('#breaks .chip').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.break === s.brk)));
     el.logCount.textContent = String(Object.keys(log).length);
 
     document.title = st === 'focus' ? `${t} · ${ZONES[zoneOf(depth)].name} · Sinker`
@@ -307,6 +317,8 @@
       if (st === 'bite' && lastStatus === 'focus') notify('Something is biting!', 'Your line went taut. Come back and reel it in.');
       if (st === 'breakOver' && lastStatus === 'break') notify('Break is over', 'Back to the water when you\'re ready.');
       if (deep && lastStatus !== 'focus' && lastStatus !== 'bite') dive.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+      // Back at the surface: clear fish that were swimming in the deep (they'd end up in the sky).
+      if (!deep && (lastStatus === 'focus' || lastStatus === 'bite')) clearSwimmers();
       lastStatus = st;
     }
   }
@@ -394,11 +406,7 @@
   $('#perks').innerHTML = PERKS.map(([ic, t, d]) => `<div class="perk card"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ICON[ic]}"/></svg></span><div><b>${t}</b><span>${d}</span></div></div>`).join('');
 
   // App Store links
-  $$('[data-store]').forEach((a) => {
-    if (APP_STORE_URL) { a.href = APP_STORE_URL; a.target = '_blank'; a.rel = 'noopener'; }
-    else if (a.tagName === 'A' && !a.classList.contains('pill')) a.href = '#get';
-  });
-  $$('[data-store-small]').forEach((x) => { x.textContent = APP_STORE_URL ? 'Download on the' : 'Coming soon on the'; });
+  $$('[data-store]').forEach((a) => { a.href = APP_STORE_URL; a.target = '_blank'; a.rel = 'noopener'; });
   $('#year').textContent = String(new Date().getFullYear());
 
   // Widget mock countdown
@@ -438,8 +446,8 @@
   $$('.reveal').forEach((x) => io.observe(x));
 
   /* ---------------- wiring ---------------- */
-  $$('#lengths .chip').forEach((b) => b.addEventListener('click', () => { s.planned = +b.dataset.min; persist(); render(Date.now()); }));
-  $$('#breaks .chip').forEach((b) => b.addEventListener('click', () => { s.brk = +b.dataset.break; persist(); render(Date.now()); }));
+  el.selFocus.addEventListener('change', () => { s.planned = +el.selFocus.value; persist(); render(Date.now()); });
+  el.selBreak.addEventListener('change', () => { s.brk = +el.selBreak.value; persist(); render(Date.now()); });
   el.cast.addEventListener('click', cast);
   el.again.addEventListener('click', cast);
   el.pause.addEventListener('click', togglePause);
@@ -452,7 +460,7 @@
     e.preventDefault();
     if (s.status === 'idle' || s.status === 'breakOver') cast(); else if (s.status === 'focus') togglePause(); else if (s.status === 'bite') reelIn();
   });
-  addEventListener('resize', layout);
+  addEventListener('resize', () => { clearSwimmers(); layout(); });
 
   layout();
   onScroll();

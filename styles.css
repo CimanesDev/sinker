@@ -88,7 +88,8 @@ p { margin: 0; }
 .store-badge strong { font-family: var(--display); font-size: 20px; line-height: 1.1; font-weight: 600; }
 
 /* ---------- hero = the timer ---------- */
-.dive { position: relative; height: 100svh; min-height: 620px; overflow: hidden; color: var(--ink); }
+/* The hero grows with its content (never clips the Cast button on short windows). */
+.dive { position: relative; min-height: 100svh; overflow: hidden; color: var(--ink); display: flex; flex-direction: column; }
 .dive .water { position: absolute; inset: 0; background: linear-gradient(180deg, var(--water-top, #5EC8E5), var(--water-bottom, #1C7FB5)); transition: background 1s linear; }
 .dive .rays { position: absolute; inset: 0; pointer-events: none; opacity: var(--sun, 1); transition: opacity 1s; }
 .dive .rays i { position: absolute; top: 28%; width: 12%; height: 70%; transform-origin: top center; background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent); filter: blur(2px); animation: ray 8s ease-in-out infinite alternate; }
@@ -110,7 +111,14 @@ p { margin: 0; }
 .cloud.c2 { width: 90px; top: 44%; left: -20%; animation-duration: 95s; animation-delay: -40s; }
 .cloud.c3 { width: 110px; top: 12%; left: -15%; animation-duration: 120s; animation-delay: -80s; }
 @keyframes drift { to { transform: translateX(130vw); } }
-.surface { position: absolute; left: -5%; right: -5%; top: calc(var(--sky-h) - 10px); height: 22px; }
+.surface { position: absolute; left: 0; right: 0; top: calc(var(--sky-h) - 22px); height: 40px; overflow: hidden; pointer-events: none; }
+.wave { position: absolute; left: 0; top: 0; width: 200%; height: 100%; }
+.wave.back { animation: waves 16s linear infinite; }
+.wave.back path { fill: rgba(255, 255, 255, 0.4); }
+.wave.front { top: 4px; animation: waves 10s linear infinite reverse; }
+.wave.front .fill { fill: var(--water-top, #5EC8E5); }
+.wave.front .foam { fill: none; stroke: rgba(255, 255, 255, 0.9); stroke-width: 2.2; vector-effect: non-scaling-stroke; }
+@keyframes waves { to { transform: translateX(-50%); } }
 .boat { position: absolute; top: calc(var(--sky-h) - var(--boat-h) * 0.82); left: var(--boat-x); width: var(--boat-w); animation: bob 3.6s ease-in-out infinite; transform-origin: 50% 80%; }
 @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(4px) rotate(1.2deg); } }
 
@@ -126,40 +134,38 @@ p { margin: 0; }
 .swimmer { position: absolute; pointer-events: none; animation: swim linear forwards; opacity: 0.85; }
 @keyframes swim { from { transform: translateX(var(--from)) scaleX(var(--dir)); } to { transform: translateX(var(--to)) scaleX(var(--dir)); } }
 
-/* timer panel */
-.panel { position: absolute; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;
-  left: 50%; transform: translateX(-50%); width: min(560px, 92vw); top: calc(var(--sky-h) + 70px); transition: top 1.4s cubic-bezier(0.65, 0, 0.35, 1), color 0.8s; }
-.dive.deep .panel { top: 30%; }
+/* timer panel: always centered under the boat, in normal flow */
+.panel { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;
+  width: min(560px, 92vw); margin: calc(var(--sky-h) + 34px) auto 44px; transition: color 0.8s; }
+.dive.deep .panel { margin-top: 14svh; min-height: calc(86svh - 30px - env(safe-area-inset-bottom)); margin-bottom: calc(26px + env(safe-area-inset-bottom)); }
+.dive.deep .controls { margin-top: auto; }
 .dive.ink-light .panel { color: #EAF6FF; }
-.eyebrow { font-weight: 800; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.75; }
-.headline { font-size: clamp(30px, 4.6vw, 52px); max-width: 15ch; text-wrap: balance; }
+.eyebrow { font-weight: 800; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; opacity: 0.9; text-shadow: 0 1px 10px rgba(6, 40, 70, 0.3); }
+.headline { font-size: clamp(32px, 4.6vw, 54px); max-width: 16ch; text-wrap: balance; color: #fff; text-shadow: 0 2px 22px rgba(6, 40, 70, 0.35); }
+.intro { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 4px; }
 .dive.deep .intro, .dive.started .intro { display: none; }
-.timer { font-family: var(--display); font-weight: 500; font-size: clamp(84px, 13vw, 150px); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
+.timer { font-family: var(--display); font-weight: 500; font-size: clamp(84px, 12vw, 140px); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
   text-shadow: 0 0 24px var(--halo, rgba(255, 255, 255, 0.55)); }
 .status { font-family: var(--display); font-weight: 600; font-size: 22px; min-height: 1.3em; }
+.status:empty { display: none; }
 .dive.biting .status { color: var(--gold); animation: pulse 0.8s ease-in-out infinite; }
 @keyframes pulse { 50% { transform: scale(1.06); } }
 .readout { font-weight: 800; font-size: 16px; opacity: 0.9; font-variant-numeric: tabular-nums; }
-.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-.chip { min-height: 40px; padding: 0 16px; border-radius: 999px; border: 0; background: rgba(255, 255, 255, 0.78); color: var(--ink); font-weight: 800; font-size: 15px; transition: background 0.2s, transform 0.15s; }
-.chip:hover { transform: translateY(-1px); }
-.chip[aria-pressed="true"] { background: var(--ink); color: #fff; }
-.chips .label { align-self: center; font-weight: 800; font-size: 13px; opacity: 0.7; margin-right: 2px; }
+.pickers { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.picker { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px 0 16px; border-radius: 999px; background: rgba(255, 255, 255, 0.82); color: var(--ink); font-weight: 800; font-size: 15px; cursor: pointer; transition: background 0.2s; }
+.picker:hover { background: #fff; }
+.picker > span { font-size: 13px; opacity: 0.65; }
+.picker select { appearance: none; -webkit-appearance: none; border: 0; background: transparent; font: inherit; color: inherit; padding: 0 22px 0 0; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B2E45' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right center; background-size: 16px; }
+.picker select:focus-visible { outline: none; }
+.picker:focus-within { outline: 3px solid var(--gold); outline-offset: 2px; }
 .controls { display: flex; gap: 12px; width: 100%; max-width: 440px; }
 .controls .btn { flex: 1; }
-.fine { font-size: 13px; opacity: 0.75; }
+.hero-store { margin-top: 4px; padding: 8px 18px 8px 14px; }
+.hero-store strong { font-size: 18px; }
+.fine { font-size: 13px; opacity: 0.85; color: #fff; text-shadow: 0 1px 8px rgba(6, 40, 70, 0.3); }
 .fine button { background: none; border: 0; padding: 0; text-decoration: underline; font-weight: 800; }
-
-/* phones/tablets while fishing: buttons pinned to the bottom like the app, so the line never crosses them */
-@media (max-width: 959px) {
-  .dive.deep .panel { top: 24%; bottom: calc(26px + env(safe-area-inset-bottom)); }
-  .dive.deep .controls { margin-top: auto; max-width: none; }
-}
-/* desktop: boat & line left, timer right — like the app in landscape */
-@media (min-width: 960px) {
-  .panel { left: auto; right: 6vw; transform: none; width: 520px; top: 50%; translate: 0 -40%; }
-  .dive.deep .panel { top: 50%; }
-}
 
 .scroll-cue { position: absolute; bottom: 18px; left: 50%; translate: -50% 0; z-index: 4; display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: 800; font-size: 13px; color: #EAF6FF; text-decoration: none; opacity: 0.9; }
 .scroll-cue span { width: 22px; height: 34px; border: 2px solid currentColor; border-radius: 12px; position: relative; }
