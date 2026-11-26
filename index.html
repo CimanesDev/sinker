@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="sections.css">
 </head>
 <body>
 
@@ -25,6 +26,8 @@
   <nav class="nav-links" aria-label="Main">
     <a href="#how">How it works</a>
     <a href="#fish">Fish</a>
+    <a href="#tank">Tank</a>
+    <a href="#shop">Shop</a>
     <a href="#pro">Pro</a>
     <a href="#faq">FAQ</a>
     <a class="pill" href="#get" data-store>Get the app</a>
@@ -150,10 +153,62 @@
 </section>
 
 <!-- ============ MIDNIGHT ============ -->
-<section class="zone" id="everywhere" data-depth="2500">
+<!-- ============ TANK ============ -->
+<section class="zone" id="tank" data-depth="1500">
+  <div class="split">
+    <div class="reveal">
+      <p class="zone-label">Midnight zone · 1,500 m</p>
+      <h2>A tank that<br>pays you back.</h2>
+      <p class="lede">Keep your best catches in your own aquarium. Every fish earns coins by the hour, and rarer, deeper fish earn a lot more. Tap to collect, feed them for a boost, drag them around and decorate.</p>
+      <ul class="ticks">
+        <li><b>Coins while you're away.</b> Each fish earns every hour, for up to 12 hours.</li>
+        <li><b>Feed for ×1.5.</b> A fed fish earns half again as much for 8 hours.</li>
+        <li><b>Grow it.</b> Start with <span data-slots-start>8</span> slots, expand to <span data-slots-max>24</span>.</li>
+        <li><b>Make it yours.</b> Six tank themes, decorations, and trophies for every zone you complete.</li>
+      </ul>
+    </div>
+    <div class="tank-demo reveal">
+      <div class="t-lid"><i></i></div>
+      <div class="t-tank" id="demo-tank" aria-label="Interactive tank demo: tap a fish to collect its coins">
+        <div class="t-rays" aria-hidden="true"><i></i><i></i><i></i></div>
+        <svg class="t-plants" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="M30 120 C 18 80, 44 60, 30 20 C 26 6, 40 0, 36 -6 C 46 10, 38 30, 44 50 C 56 80, 36 100, 46 120Z" fill="#3FBF7F" opacity=".8"/><path d="M360 120 C 350 90, 372 64, 356 30 C 366 50, 380 76, 372 120Z" fill="#2FA36B" opacity=".85"/><path d="M60 120 C 56 100, 70 90, 64 74 C 74 92, 74 104, 70 120Z" fill="#2FA36B" opacity=".7"/></svg>
+        <div class="t-fish" id="demo-fish"></div>
+        <div class="t-sand"></div>
+        <div class="t-glass" aria-hidden="true"></div>
+      </div>
+      <div class="t-stand"><i></i><i></i></div>
+      <div class="t-bar">
+        <span class="t-coins" aria-live="polite"><span class="coin"></span><b id="demo-coins">0</b></span>
+        <button class="t-btn" id="demo-feed" type="button">Feed</button>
+        <button class="t-btn" id="demo-collect" type="button">Collect all</button>
+      </div>
+      <div class="t-themes" id="demo-themes" role="group" aria-label="Tank theme"></div>
+      <p class="t-hint">Tap a fish to collect its coins. This is a demo: in the app they really earn while you're away.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOP ============ -->
+<section class="zone" id="shop" data-depth="2600">
+  <div class="reveal">
+    <p class="zone-label">Midnight zone · 2,600 m</p>
+    <h2>Gear up.<br>Go deeper.</h2>
+    <p class="lede">Spend what your tank earns. Every rod reaches deeper than the last, boats change your whole scene, and bait tilts the odds toward rare fish.</p>
+  </div>
+  <div class="tabs reveal" role="tablist" aria-label="Shop">
+    <button role="tab" aria-selected="true" data-tab="rods">Rods</button>
+    <button role="tab" aria-selected="false" data-tab="boats">Boats</button>
+    <button role="tab" aria-selected="false" data-tab="baits">Bait</button>
+    <button role="tab" aria-selected="false" data-tab="tank">Tank &amp; decor</button>
+  </div>
+  <div class="shelf reveal" id="shelf" role="tabpanel"></div>
+  <p class="shelf-note reveal">Prices in coins you earn by fishing. <span class="pro-mini">PRO</span> items come with Sinker Pro.</p>
+</section>
+
+<section class="zone" id="everywhere" data-depth="3600">
   <div class="split flip">
     <div class="reveal">
-      <p class="zone-label">Midnight zone · 1,000–4,000 m</p>
+      <p class="zone-label">Midnight zone · 3,600 m</p>
       <h2>Your line,<br>always in view.</h2>
       <p class="lede">Watch it sink from the Dynamic Island, the Lock Screen and your Home Screen widgets, without opening the app. Start a session with Siri, a Shortcut, or automatically when a Focus mode turns on.</p>
     </div>
@@ -238,6 +293,8 @@
 </div>
 
 <script src="species.js"></script>
+<script src="art.js"></script>
 <script src="app.js"></script>
+<script src="sections.js"></script>
 </body>
 </html>

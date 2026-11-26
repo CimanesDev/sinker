@@ -106,6 +106,8 @@
     }
   }
 
+  window.SINKER_FISH = fishSVG; // shared with sections.js (tank demo)
+
   /* ---------------- persistence ---------------- */
   const KEY = 'sinker-web-v1';
   const LOG = 'sinker-web-log-v1';

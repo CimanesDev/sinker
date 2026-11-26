@@ -1,0 +1,66 @@
+/* Tank demo + shop shelf sections (loaded after styles.css). */
+
+/* ---------- tank demo ---------- */
+.ticks { list-style: none; margin: 26px 0 0; padding: 0; display: grid; gap: 12px; }
+.ticks li { position: relative; padding-left: 34px; color: rgba(234, 246, 255, 0.82); font-size: 16px; }
+.ticks li::before { content: ""; position: absolute; left: 0; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: var(--gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233B2600' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E") center / 14px no-repeat; }
+.ticks b { color: #fff; }
+
+.tank-demo { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 520px; justify-self: center; }
+.t-lid { width: 104%; height: 16px; border-radius: 10px 10px 4px 4px; background: #24323D; position: relative; z-index: 2; margin-bottom: -6px; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3); }
+.t-lid i { position: absolute; left: 18%; right: 18%; bottom: 3px; height: 3px; border-radius: 2px; background: #FFF4C8; box-shadow: 0 0 12px 2px rgba(255, 244, 200, 0.6); }
+.t-tank { position: relative; width: 100%; aspect-ratio: 5 / 3.4; border-radius: 14px; overflow: hidden; border: 5px solid #B9D6E2;
+  background: linear-gradient(180deg, var(--t-top, #7FD6EC), var(--t-bottom, #2A93C4)); transition: background 0.6s; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35); }
+.t-rays i { position: absolute; top: 0; width: 16%; height: 85%; background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent); animation: ray 6s ease-in-out infinite alternate; }
+.t-rays i:nth-child(1) { left: 14%; }
+.t-rays i:nth-child(2) { left: 44%; width: 10%; animation-delay: -2s; }
+.t-rays i:nth-child(3) { left: 72%; animation-delay: -4s; }
+.t-plants { position: absolute; left: 0; right: 0; bottom: 8%; width: 100%; height: 42%; }
+.t-sand { position: absolute; left: 0; right: 0; bottom: 0; height: 12%; background: var(--t-sand, #EAD7A6); border-radius: 60% 60% 0 0 / 30% 30% 0 0; transition: background 0.6s; box-shadow: inset 0 -8px 12px rgba(0, 0, 0, 0.18); }
+.t-glass { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, rgba(255, 255, 255, 0.12) 0 8%, transparent 8% 14%, rgba(255, 255, 255, 0.06) 14% 17%, transparent 17%), radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0, 8, 20, 0.28)); }
+.t-fish { position: absolute; inset: 0; }
+.t-swim { position: absolute; cursor: pointer; border: 0; background: none; padding: 0; width: var(--w); transition: left 4s ease-in-out, top 4s ease-in-out; }
+.t-swim svg { width: 100%; height: auto; transition: transform 0.4s; }
+.t-swim.flip svg { transform: scaleX(-1); }
+.t-swim:hover svg { filter: brightness(1.08); }
+.t-swim .bubble { position: absolute; left: 50%; top: -22px; translate: -50% 0; display: flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: 999px; background: #fff; color: var(--ink); font: 800 12px var(--body); white-space: nowrap; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18); }
+.t-swim.fed svg { filter: drop-shadow(0 0 6px rgba(255, 226, 154, 0.9)); }
+.coin { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); border: 2px solid #C98E1C; }
+.t-pop { position: absolute; z-index: 5; pointer-events: none; font: 600 18px var(--display); color: #fff; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4); animation: popup 0.9s ease-out forwards; }
+@keyframes popup { from { transform: translateY(0) scale(0.8); opacity: 1; } to { transform: translateY(-40px) scale(1.1); opacity: 0; } }
+.t-pellet { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: #C9853A; animation: sinkdown 2.6s ease-in forwards; }
+@keyframes sinkdown { to { transform: translateY(120px); opacity: 0; } }
+.t-stand { width: 108%; height: 26px; margin-top: -4px; border-radius: 8px; background: #8A5A3B; display: flex; gap: 6px; padding: 9px 16px 4px; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); }
+.t-stand i { flex: 1; border-radius: 3px; background: #7A5536; }
+.t-bar { display: flex; gap: 10px; align-items: center; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+.t-coins { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); color: var(--ink); font: 600 18px var(--display); font-variant-numeric: tabular-nums; }
+.t-coins .coin { width: 16px; height: 16px; }
+.t-btn { min-height: 40px; padding: 0 16px; border-radius: 12px; border: 0; background: rgba(255, 255, 255, 0.16); color: #fff; font: 800 15px var(--body); transition: background 0.2s; }
+.t-btn:hover { background: rgba(255, 255, 255, 0.26); }
+.t-themes { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }
+.t-theme { width: 40px; height: 40px; border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.25); cursor: pointer; position: relative; overflow: hidden; padding: 0; }
+.t-theme[aria-pressed="true"] { border-color: #fff; box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25); }
+.t-theme .pro-dot { position: absolute; right: 2px; top: 2px; font: 800 7px var(--body); background: var(--gold); color: #3B2600; border-radius: 4px; padding: 0 2px; }
+.t-hint { margin-top: 10px; font-size: 13px; color: rgba(234, 246, 255, 0.65); text-align: center; max-width: 40ch; }
+
+/* ---------- shop shelf ---------- */
+.tabs { display: flex; gap: 8px; margin-top: 30px; flex-wrap: wrap; }
+.tabs button { min-height: 42px; padding: 0 18px; border-radius: 999px; border: 0; background: rgba(255, 255, 255, 0.1); color: #EAF6FF; font: 800 15px var(--body); transition: background 0.2s; }
+.tabs button[aria-selected="true"] { background: #fff; color: var(--ink); }
+.shelf { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(210px, 240px); gap: 14px; overflow-x: auto; padding: 22px 4px 14px; margin: 0 -4px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+.item { scroll-snap-align: start; display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: var(--radius); background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12); transition: transform 0.25s, background 0.25s; }
+.item:hover { transform: translateY(-4px); background: rgba(255, 255, 255, 0.12); }
+.item .art { height: 110px; border-radius: 16px; display: grid; place-items: center; background: linear-gradient(180deg, #CDEFFB, #9ED8F5 62%, #5EC8E5 62%, #2A93C4); overflow: hidden; }
+.item .art.water { background: linear-gradient(180deg, #2A93C4, #12407A); }
+.item .art svg { width: 86%; height: 86%; }
+.item .art.bait svg { width: 64px; height: 64px; }
+.item b { font: 600 18px var(--display); color: #fff; }
+.item p { font-size: 13px; color: rgba(234, 246, 255, 0.72); flex: 1; }
+.item .stat { display: inline-flex; align-self: flex-start; padding: 2px 10px; border-radius: 999px; background: rgba(143, 245, 225, 0.14); color: var(--glow); font-size: 12px; font-weight: 800; }
+.item .price { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 12px; background: var(--coral); color: #fff; font: 600 15px var(--display); }
+.item .price.free { background: rgba(255, 255, 255, 0.14); }
+.item .price.pro { background: var(--gold); color: #3B2600; }
+.swatch { height: 110px; border-radius: 16px; position: relative; overflow: hidden; }
+.swatch::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: var(--sand); border-radius: 50% 50% 0 0 / 30% 30% 0 0; }
+.shelf-note { margin-top: 6px; font-size: 13px; color: rgba(234, 246, 255, 0.65); }
+.pro-mini { background: var(--gold); color: #3B2600; border-radius: 6px; padding: 0 5px; font-weight: 800; font-size: 11px; }
