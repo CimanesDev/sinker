@@ -131,6 +131,9 @@ p { margin: 0; }
 .dive.deep .snow { opacity: 1; }
 .snow i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(255, 255, 255, 0.6); animation: snow linear infinite; }
 @keyframes snow { from { transform: translateY(0); } to { transform: translateY(-110vh); } }
+/* fish live only in the water: this box starts below the surface and follows the world when you dive */
+#swimmers { position: absolute; left: 0; right: 0; bottom: 0; top: calc(var(--sky-h) + 16px); overflow: hidden; pointer-events: none; transition: top 1.4s cubic-bezier(0.65, 0, 0.35, 1); }
+.dive.deep #swimmers { top: 0; }
 .swimmer { position: absolute; pointer-events: none; animation: swim linear forwards; opacity: 0.85; }
 @keyframes swim { from { transform: translateX(var(--from)) scaleX(var(--dir)); } to { transform: translateX(var(--to)) scaleX(var(--dir)); } }
 

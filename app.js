@@ -357,15 +357,15 @@
     const pool = SPECIES.filter((sp) => sp.zone === zone && sp.rarity !== 'L');
     if (!pool.length) return;
     const sp = pool[Math.floor(Math.random() * pool.length)];
-    const W = dive.clientWidth, H = dive.clientHeight;
+    const W = swimmers.clientWidth;
     const size = 40 + Math.random() * 40;
     const dir = Math.random() < 0.5 ? 1 : -1;
     const f = document.createElement('div');
     f.className = 'swimmer';
     f.innerHTML = fishSVG(sp);
     f.style.width = `${size}px`;
-    const minTop = deep ? 0.12 : (geo.skyH + 60) / H;
-    f.style.top = `${(minTop + Math.random() * (0.8 - minTop)) * 100}%`;
+    // top is a % of the water-only box, so a fish can never sit in the sky
+    f.style.top = `${(0.08 + Math.random() * 0.72) * 100}%`;
     f.style.left = '0';
     // fish art faces left (head at x≈10), so flip when swimming right
     f.style.setProperty('--dir', String(-dir));
